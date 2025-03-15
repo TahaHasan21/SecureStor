@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - www.codingnepalweb.com -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Repository Web Application</title>
+
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <span class="hamburger-btn material-symbols-rounded">menu</span>
+            <a href="#" class="logo">
+                <img src="images/logo.jpg" alt="logo">
+                <h2>InfiniteStorage</h2>
+            </a>
+            <ul class="links">
+              <span class="close-btn material-symbols-rounded">close</span>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="Pricing.html">Pricing</a></li>
+              <li><a href="About.html">About us</a></li>
+              <li><a href="contact.html">Contact us</a></li>
+            </ul>            
+            <button class="login-btn">LOG IN</button>
+        </nav>
+    </header>
+
+    <div class="container">
+      <div class="home_para">
+          <p id="dynamic-text"></p>
+      </div>
+  </div>
+  
+
+    <div class="blur-bg-overlay"></div>
+    <div class="form-popup">
+        <span class="close-btn material-symbols-rounded">close</span>
+        <div class="form-box login">
+            <div class="form-details">
+                <h2>Welcome Back</h2>
+                <p>Please log in using your personal information to stay connected with us.</p>
+            </div>
+            <div class="form-content">
+                <h2>LOGIN</h2>
+                <form action="#">
+                    <div class="input-field">
+                        <input type="text" required id="Lemail">
+                        <label>Email</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" required id="Lpassword">
+                        <label>Password</label>
+                    </div>
+                    <a href="#" class="forgot-pass-link">Forgot password?</a>
+                    <button onclick="login()">Login</button>
+                </form>
+                <div class="bottom-link">
+                    Don't have an account?
+                    <a href="#" id="signup-link">Signup</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-box signup">
+            <div class="form-details">
+                <h2>Create Account</h2>
+                <p>To become a part of our community, please sign up using your personal information.</p>
+            </div>
+            <div class="form-content">
+                <h2>SIGNUP</h2>
+                <form action="#">
+                    <div class="input-field">
+                        <input type="text" required id="email">
+                        <label>Enter your email</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" required id="password">
+                        <label>Create password</label>
+                    </div>
+                    <div class="policy-text">
+                        <input type="checkbox" id="policy">
+                        <label for="policy">
+                            I agree the
+                            <a href="#" class="option">Terms & Conditions</a>
+                        </label>
+                    </div>
+                    <button onclick="register()">Register</button>
+                </form>
+                <div class="bottom-link">
+                    Already have an account? 
+                    <a href="#" id="login-link">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+   
+
+    <!-- Our script must be loaded after firebase references -->    
+    <script>
+    const navbarMenu = document.querySelector(".navbar .links");
+    const hamburgerBtn = document.querySelector(".hamburger-btn");
+    const hideMenuBtn = navbarMenu.querySelector(".close-btn");
+    const showPopupBtn = document.querySelector(".login-btn");
+    const formPopup = document.querySelector(".form-popup");
+    const hidePopupBtn = formPopup.querySelector(".close-btn");
+    const signupLoginLink = formPopup.querySelectorAll(".bottom-link a");
+
+    // Show mobile menu
+    hamburgerBtn.addEventListener("click", () => {
+        navbarMenu.classList.toggle("show-menu");
+    });
+
+    // Hide mobile menu
+    hideMenuBtn.addEventListener("click", () =>  hamburgerBtn.click());
+
+    // Show login popup
+    showPopupBtn.addEventListener("click", () => {
+        document.body.classList.toggle("show-popup");
+    });
+
+    // Hide login popup
+    hidePopupBtn.addEventListener("click", () => showPopupBtn.click());
+
+    // Show or hide signup form
+    signupLoginLink.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            formPopup.classList[link.id === 'signup-link' ? 'add' : 'remove']("show-signup");
+        });
+    });
+
+
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyCrU6lMU8JY9rIeawoHwYdc8wCrE_9WRPQ",
+    authDomain: "infinite-f34e7.firebaseapp.com",
+    projectId: "infinite-f34e7",
+    storageBucket: "infinite-f34e7.appspot.com",
+    messagingSenderId: "270645208675",
+    appId: "1:270645208675:web:77828d08fbbc8fd8f7fa56",
+    measurementId: "G-ZXMB1K9QSF"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  // Initialize variables
+  const auth = firebase.auth()
+  const database = firebase.database()
+  
+  // Set up our register function
+  function register () {
+    // Get all our input fields
+    email = document.getElementById('email').value
+    password = document.getElementById('password').value
+  
+    // Validate input fields
+    if (validate_email(email) == false || validate_password(password) == false) {
+      alert('Email or Password is Outta Line!!')
+      return
+      // Don't continue running the code
+    }
+   
+    // Move on with Auth
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(function() {
+      // Declare user variable
+      var user = auth.currentUser
+  
+      // Add this user to Firebase Database
+      var database_ref = database.ref()
+  
+      // Create User data
+      var user_data = {
+        email : email,
+        password : password,
+        last_login : Date.now()
+      }
+  
+      // Push to Firebase Database
+      database_ref.child('users/' + user.uid).set(user_data)
+  
+      // DOne
+      alert('User Created!!')
+    })
+    .catch(function(error) {
+      // Firebase will use this to alert of its errors
+      var error_code = error.code
+      var error_message = error.message
+  
+      alert(error_message)
+    })
+  }
+  
+  // Set up our login function
+  function login () {
+    // Get all our input fields
+    email = document.getElementById('Lemail').value
+    password = document.getElementById('Lpassword').value
+  
+    // Validate input fields
+    if (validate_email(email) == false || validate_password(password) == false) {
+      alert('Email or Password is Outta Line!!')
+      return
+      // Don't continue running the code
+    }
+  
+    auth.signInWithEmailAndPassword(email, password)
+    .then(function() {
+      // Declare user variable
+      var user = auth.currentUser
+  
+      // Add this user to Firebase Database
+      var database_ref = database.ref()
+  
+      // Create User data
+      var user_data = {
+        last_login : Date.now()
+      }
+  
+      // Push to Firebase Database
+      database_ref.child('users/' + user.uid).update(user_data)
+  
+      // DOne
+      window.location.href = "home.html";
+  
+    })
+    .catch(function(error) {
+      // Firebase will use this to alert of its errors
+      var error_code = error.code
+      var error_message = error.message
+  
+      alert(error_message)
+    })
+  }
+  
+  
+  
+  
+  // Validate Functions
+  function validate_email(email) {
+    expression = /^[^@]+@\w+(\.\w+)+\w$/
+    if (expression.test(email) == true) {
+      // Email is good
+      return true
+    } else {
+      // Email is not good
+      return false
+    }
+  }
+  
+  function validate_password(password) {
+    // Firebase only accepts lengths greater than 6
+    if (password < 6) {
+      return false
+    } else {
+      return true
+    }
+  }
+  
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    // Function to generate dynamic typewriter effect
+    function generateTypewriterEffect(text, targetElement, speed) {
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < text.length) {
+                targetElement.textContent += text.charAt(index);
+                index++;
+            } else {
+                clearInterval(interval);
+            }
+        }, speed);
+    }
+
+    // Call the function to generate typewriter effect when the page loads
+    const dynamicText = "Securely collaborate on content anywhere, anytime with us!!";
+    const dynamicParagraph = document.getElementById('dynamic-text');
+    generateTypewriterEffect(dynamicText, dynamicParagraph, 50); // Adjust speed as needed
+});
+
+
+    </script>
+</body>
+</html>

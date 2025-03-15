@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <title>Uploaded Files</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <span class="hamburger-btn material-symbols-rounded">menu</span>
+            <a href="#" class="logo">
+                <img src="images/logo.jpg" alt="logo">
+                <h2>InfiniteStorage</h2>
+            </a>
+            <ul class="links">
+                <span class="close-btn material-symbols-rounded">close</span>
+                <li><a href="home.html"><button class="custom-btn btn-15">Home</button></a></li>
+                <li><a href="Uploaded.html"><button class="custom-btn btn-15">Uploaded</button></a></li>
+                <li><a href="index.html"><button id="logoutBtn" class="custom-btn btn-15">LOG OUT</button></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="table-container">
+        <table id="fileListTable">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Last Modified</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="fileListBody">
+                <!-- File list will be populated here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+    <script src="home.js"></script>
+</body>
+</html>
